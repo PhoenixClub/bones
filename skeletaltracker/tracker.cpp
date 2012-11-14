@@ -158,3 +158,6 @@ void tracker::processframe(NUI_SKELETON_FRAME* pSkeletonFrame){
 		startkinect();
  }       
  
+ void tracker::noise(LPCSTR a){
+		PlaySound(TEXT(a), NULL, SND_ASYNC + SND_NOSTOP);
+ }
