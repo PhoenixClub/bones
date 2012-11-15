@@ -23,14 +23,14 @@ HRESULT tracker::startkinect(){
 
         // Get the status of the sensor, and if connected, then we can initialize it
         hr = pNuiSensor->NuiStatus();
-        if (S_OK == hr)
+	if (SUCCEEDED(hr))
         {
             m_pNuiSensor = pNuiSensor;
             break;
         }
 
         // This sensor wasn't OK, so release it since we're not using it
-        pNuiSensor->Release();
+        pNuiSensor->Release(), pNuiSensor = NULL;
     }
 
     if (NULL != m_pNuiSensor )
