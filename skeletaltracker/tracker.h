@@ -13,8 +13,8 @@ class tracker
 		HRESULT startkinect();
 		void update();		
 		void processframe(NUI_SKELETON_FRAME*);
-		void skeletontracked(NUI_SKELETON_DATA);
-		void skeletonposition(Vector4);
+		void skeletontracked(NUI_SKELETON_DATA){};
+		void skeletonposition(Vector4){};
 		void mapbones(const NUI_SKELETON_DATA &, NUI_SKELETON_POSITION_INDEX, NUI_SKELETON_POSITION_INDEX);
 		
 };

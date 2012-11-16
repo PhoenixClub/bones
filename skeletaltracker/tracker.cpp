@@ -42,7 +42,7 @@ HRESULT tracker::startkinect(){
             // Create an event that will be signaled when skeleton data is available
             m_hNextSkeletonEvent = CreateEventW(NULL, TRUE, FALSE, NULL);
 			std::cout<<"kinect found";
-			noise("test.wav");
+			noise("succeed.wav");
             // Open a skeleton stream to receive skeleton data
             hr = m_pNuiSensor->NuiSkeletonTrackingEnable(m_hNextSkeletonEvent, 0); 
         }
@@ -51,6 +51,7 @@ HRESULT tracker::startkinect(){
     if (NULL == m_pNuiSensor || FAILED(hr))
     {
 		std::cout<<"no kinect found";
+		noise("fail.wav");
         return E_FAIL;
     }
 
