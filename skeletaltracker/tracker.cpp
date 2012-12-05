@@ -134,6 +134,13 @@ void Tracker::Debugwindow()
     *stdin = *hf_in;
 }
 
+bool Tracker::m_Timer(int length)
+{
+	clock_t timer;
+	while ((((double)(clock() - timer)) / (double) CLOCKS_PER_SEC) != length);
+	return true;
+}
+
 
 void Tracker::Go() 
 {

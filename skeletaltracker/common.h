@@ -15,4 +15,5 @@
 #include <stdio.h>
 #include <io.h>
 #include "NuiApi.h"
+#include <time.h>
 
