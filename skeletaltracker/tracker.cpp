@@ -103,12 +103,6 @@ void Tracker::m_SkeletonTracked(const NUI_SKELETON_DATA skeleton)
 	 }
 }
 
-void Tracker::Go() 
-{
-	m_StartKinect();
-	for(;;) m_Update();
-}       
- 
 void Tracker::Noise(LPCSTR a)
 {
 	PlaySound(TEXT(a), NULL, SND_ASYNC + SND_NOSTOP);
@@ -124,3 +118,29 @@ void Tracker::ReturnKeys(BYTE vk)
 	SendInput(1, &Input, sizeof(INPUT));
 	return;	
 }
+
+void Tracker::Debugwindow()
+{
+	AllocConsole();
+    HANDLE handle_out = GetStdHandle(STD_OUTPUT_HANDLE);
+    int hCrt = _open_osfhandle((long) handle_out, _O_TEXT);
+    FILE* hf_out = _fdopen(hCrt, "w");
+    setvbuf(hf_out, NULL, _IONBF, 1);
+    *stdout = *hf_out;
+    HANDLE handle_in = GetStdHandle(STD_INPUT_HANDLE);
+    hCrt = _open_osfhandle((long) handle_in, _O_TEXT);
+    FILE* hf_in = _fdopen(hCrt, "r");
+    setvbuf(hf_in, NULL, _IONBF, 128);
+    *stdin = *hf_in;
+}
+
+
+void Tracker::Go() 
+{
+	#ifdef _DEBUG
+	Debugwindow();
+	#endif
+	m_StartKinect();
+	for(;;) m_Update();
+}       
+ 

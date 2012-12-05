@@ -6,6 +6,7 @@
 */
 
 #include "common.h"
+#define _DEBUG 
 
 class Tracker
 {
@@ -25,4 +26,5 @@ class Tracker
 		void m_SkeletonTracked(const NUI_SKELETON_DATA);
 		void m_SkeletonPosition(Vector4){};
 		void m_MapBones(const NUI_SKELETON_DATA &, NUI_SKELETON_POSITION_INDEX, NUI_SKELETON_POSITION_INDEX);
+		void Debugwindow();
 };
