@@ -20,10 +20,13 @@ class Tracker
 	private:
 		HANDLE m_hNextSkeletonEvent;
 	    INuiSensor* m_pNuiSensor;
+
 		HRESULT m_StartKinect();
+		Vector4 m_leftHand, m_rightHand, m_leftShoulder, m_rightShoulder;
 		void m_Update();		
 		void m_ProcessFrame(NUI_SKELETON_FRAME*);
 		void m_SkeletonTracked(const NUI_SKELETON_DATA);
+		void m_GenerateInput();
 		void m_SkeletonPosition(Vector4){};
 		void m_MapBones(const NUI_SKELETON_DATA &, NUI_SKELETON_POSITION_INDEX, NUI_SKELETON_POSITION_INDEX);
 		void Debugwindow();

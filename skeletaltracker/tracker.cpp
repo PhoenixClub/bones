@@ -1,6 +1,5 @@
 /*
 	Skeletal Tracker - Tracker.cpp
-
 	Written by Matthew Beckett. 2012.
 */
 
@@ -41,7 +40,7 @@ HRESULT Tracker::m_StartKinect()
             // Create an event that will be signaled when skeleton data is available
             m_hNextSkeletonEvent = CreateEventW(NULL, TRUE, FALSE, NULL);
 			std::cout << "A Kinect Sensor has been found";
-			Noise("succeed.wav");
+			//Noise("succeed.wav");
 
             // Open a skeleton stream to receive skeleton data
             hr = m_pNuiSensor->NuiSkeletonTrackingEnable(m_hNextSkeletonEvent, 0); 
@@ -51,7 +50,7 @@ HRESULT Tracker::m_StartKinect()
     if (NULL == m_pNuiSensor || FAILED(hr)) 
 	{
 		std::cout << "No Kinect Sensor Found";
-		Noise("fail.wav");
+		//Noise("fail.wav");
         return E_FAIL;
     }
 
@@ -67,6 +66,7 @@ void Tracker::m_Update()
         // Get the skeleton frame that is ready
         if (SUCCEEDED(m_pNuiSensor->NuiSkeletonGetNextFrame(0, &skeletonFrame))) m_ProcessFrame(&skeletonFrame);
 	}
+	m_GenerateInput();
 }
 
 void Tracker::m_ProcessFrame(NUI_SKELETON_FRAME* pSkeletonFrame) 
@@ -82,24 +82,54 @@ void Tracker::m_ProcessFrame(NUI_SKELETON_FRAME* pSkeletonFrame)
 	}
 }
 
-// TO BE COMPLETED
+
 void Tracker::m_SkeletonTracked(const NUI_SKELETON_DATA skeleton)
 {
-	 Vector4 lefthand = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HAND_LEFT];
+	 Vector4 lefthand = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HAND_LEFT];//get and store on a timed loop
 	 Vector4 leftshoulder = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_SHOULDER_LEFT];
 	 Vector4 righthand = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HAND_RIGHT];
 	 Vector4 rightshoulder = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_SHOULDER_RIGHT];
 
-	 if (lefthand.x==(leftshoulder.x+5) && righthand.x==(rightshoulder.x+5)) 
+	 m_leftHand = lefthand;
+	 m_rightHand = righthand;
+	 m_leftShoulder = leftshoulder;
+	 m_rightShoulder = rightshoulder;
+}
+
+void Tracker::m_GenerateInput()
+{
+	Vector4 lHand = m_leftHand;
+	Vector4 rHand = m_rightHand;
+	Vector4 lShoulder = m_leftShoulder;
+	Vector4 rShoulder = m_rightShoulder;
+
+	//if (lHand.x==(lShoulder.x+5) && rHand.x==(rShoulder.x+5)) // perform on stored functions
+	// {
+	//	Sleep(200);
+	//	if (lHand.x==(lShoulder.x-5) && rHand.x==(rShoulder.x-5)) 
+	//	{
+	//		ReturnKeys(VK_RIGHT);
+	//		std::cout << "\nMOVING LEFT";
+	//	}
+	// }
+
+	// if (lHand.x==(lShoulder.x-5) && rHand.x==(rShoulder.x-5)) 
+	// {
+	//	 Sleep(200);
+	//	 if (lHand.x==(lShoulder.x+5) && rHand.x==(rShoulder.x+5))
+	//	 {
+	//		 ReturnKeys(VK_RIGHT);
+	//		 std::cout << "\nMOVING RIGHT";
+	//	 }
+	// }
+	 if (lHand.x > lShoulder.x)
 	 {
-		Sleep(200);
-		if (lefthand.x==(leftshoulder.x-5) && righthand.x==(rightshoulder.x-5)) ReturnKeys(VK_RIGHT);
+		 Noise("succeed.wav");
 	 }
 
-	 if (lefthand.x==(leftshoulder.x-5) && righthand.x==(rightshoulder.x-5)) 
+	 if (rHand.x < rShoulder.x)
 	 {
-		 Sleep(200);
-		 if (lefthand.x==(leftshoulder.x+5) && righthand.x==(rightshoulder.x+5)) ReturnKeys(VK_RIGHT);
+		 Noise("fail.wav");
 	 }
 }
 
@@ -136,7 +166,7 @@ void Tracker::Debugwindow()
 
 bool Tracker::m_Timer(int length)
 {
-	clock_t timer;
+	clock_t timer = clock();
 	while ((((double)(clock() - timer)) / (double) CLOCKS_PER_SEC) != length);
 	return true;
 }
@@ -148,6 +178,6 @@ void Tracker::Go()
 	Debugwindow();
 	#endif
 	m_StartKinect();
-	for(;;) m_Update();
+	for(;;) m_Update(); 
 }       
  
