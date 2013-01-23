@@ -102,35 +102,23 @@ void Tracker::m_GenerateInput()
 	Vector4 rHand = m_rightHand;
 	Vector4 lShoulder = m_leftShoulder;
 	Vector4 rShoulder = m_rightShoulder;
+	
+	if ((lHand.x > lShoulder.x) && (rHand.x <= rShoulder.x))  //back a page
+		{
+			ReturnKeys(VK_PRIOR);
+			std::cout << "Back"<<std::endl;
+			Sleep(1000);	
+		}
 
-	//if (lHand.x==(lShoulder.x+5) && rHand.x==(rShoulder.x+5)) // perform on stored functions
-	// {
-	//	Sleep(200);
-	//	if (lHand.x==(lShoulder.x-5) && rHand.x==(rShoulder.x-5)) 
-	//	{
-	//		ReturnKeys(VK_RIGHT);
-	//		std::cout << "\nMOVING LEFT";
-	//	}
-	// }
-
-	// if (lHand.x==(lShoulder.x-5) && rHand.x==(rShoulder.x-5)) 
-	// {
-	//	 Sleep(200);
-	//	 if (lHand.x==(lShoulder.x+5) && rHand.x==(rShoulder.x+5))
-	//	 {
-	//		 ReturnKeys(VK_RIGHT);
-	//		 std::cout << "\nMOVING RIGHT";
-	//	 }
-	// }
-	 if (lHand.x > lShoulder.x)
-	 {
-		 Noise("succeed.wav");
-	 }
-
-	 if (rHand.x < rShoulder.x)
-	 {
-		 Noise("fail.wav");
-	 }
+	else if ((lHand.x <= lShoulder.x+0.2) && (rHand.x >= rShoulder.x+0.2))  //back a page
+		{
+			ReturnKeys(VK_NEXT);
+			std::cout << "Forward"<<std::endl;
+			Sleep(1000);	
+		}
+	else {
+		std::cout << "Nothing" << std::endl;
+	}
 }
 
 void Tracker::Noise(LPCSTR a)
