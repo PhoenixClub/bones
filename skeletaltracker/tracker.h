@@ -6,7 +6,7 @@
 */
 
 #include "common.h"
-#define _DEBUG 
+
 
 class Tracker
 {
@@ -20,9 +20,11 @@ class Tracker
 	private:
 		HANDLE m_hNextSkeletonEvent;
 	    INuiSensor* m_pNuiSensor;
-
 		HRESULT m_StartKinect();
-		Vector4 m_leftHand, m_rightHand, m_leftShoulder, m_rightShoulder;
+		Vector4 m_rightElbow, m_rightAnkle, m_rightFoot, m_rightShoulder, m_rightHand, m_rightHip, m_rightWrist, m_rightKnee;
+		Vector4 m_leftElbow, m_leftAnkle, m_leftFoot, m_leftShoulder, m_leftHand, m_leftHip, m_leftWrist, m_leftKnee;
+		Vector4 m_centerShoulder, m_centerHip;
+		Vector4 m_Head, m_Spine;
 		void m_Update();		
 		void m_ProcessFrame(NUI_SKELETON_FRAME*);
 		void m_SkeletonTracked(const NUI_SKELETON_DATA);

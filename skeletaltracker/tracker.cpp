@@ -2,7 +2,6 @@
 	Skeletal Tracker - Tracker.cpp
 	Written by Matthew Beckett. 2012.
 */
-
 #include "tracker.h"
 
 HRESULT Tracker::m_StartKinect() 
@@ -40,7 +39,7 @@ HRESULT Tracker::m_StartKinect()
             // Create an event that will be signaled when skeleton data is available
             m_hNextSkeletonEvent = CreateEventW(NULL, TRUE, FALSE, NULL);
 			std::cout << "A Kinect Sensor has been found";
-			//Noise("succeed.wav");
+			Noise("succeed.wav");
 
             // Open a skeleton stream to receive skeleton data
             hr = m_pNuiSensor->NuiSkeletonTrackingEnable(m_hNextSkeletonEvent, 0); 
@@ -50,7 +49,7 @@ HRESULT Tracker::m_StartKinect()
     if (NULL == m_pNuiSensor || FAILED(hr)) 
 	{
 		std::cout << "No Kinect Sensor Found";
-		//Noise("fail.wav");
+		Noise("fail.wav");
         return E_FAIL;
     }
 
@@ -85,15 +84,27 @@ void Tracker::m_ProcessFrame(NUI_SKELETON_FRAME* pSkeletonFrame)
 
 void Tracker::m_SkeletonTracked(const NUI_SKELETON_DATA skeleton)
 {
-	 Vector4 lefthand = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HAND_LEFT];//get and store on a timed loop
-	 Vector4 leftshoulder = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_SHOULDER_LEFT];
-	 Vector4 righthand = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HAND_RIGHT];
-	 Vector4 rightshoulder = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_SHOULDER_RIGHT];
-
-	 m_leftHand = lefthand;
-	 m_rightHand = righthand;
-	 m_leftShoulder = leftshoulder;
-	 m_rightShoulder = rightshoulder;
+	m_leftHand = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HAND_LEFT];//get and store on a timed loop
+	m_leftShoulder = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_SHOULDER_LEFT];
+	m_leftElbow = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_ELBOW_LEFT];
+	m_leftHip = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HIP_LEFT];
+	m_leftAnkle = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_ANKLE_LEFT];
+	m_leftFoot = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_FOOT_LEFT];
+	m_leftWrist = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_WRIST_LEFT];
+	m_leftKnee = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_KNEE_LEFT];
+	m_rightHand = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HAND_RIGHT];
+	m_rightShoulder = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_SHOULDER_RIGHT];
+	m_rightElbow = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_ELBOW_RIGHT];
+	m_rightHip = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HIP_RIGHT];
+	m_rightAnkle = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_ANKLE_RIGHT];
+	m_rightFoot = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_FOOT_RIGHT];
+	m_rightKnee = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_KNEE_RIGHT];
+	m_rightWrist = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_WRIST_RIGHT];
+	m_centerShoulder = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_SHOULDER_CENTER];
+	m_centerHip = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HIP_CENTER];
+	m_Head = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HEAD];
+	m_Spine = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_SPINE];
+	
 }
 
 void Tracker::m_GenerateInput()
@@ -164,8 +175,18 @@ void Tracker::Go()
 {
 	#ifdef _DEBUG
 	Debugwindow();
+	if (m_StartKinect()==E_FAIL)
+	{
+		std::cin.get();
+		return;
+	};
 	#endif
-	m_StartKinect();
+	#ifndef _DEBUG
+	if (m_StartKinect()==E_FAIL)
+	{
+		return;
+	};
+	#endif
 	for(;;) m_Update(); 
 }       
  
