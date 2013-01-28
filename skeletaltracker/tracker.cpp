@@ -38,7 +38,9 @@ HRESULT Tracker::m_StartKinect()
 		{
             // Create an event that will be signaled when skeleton data is available
             m_hNextSkeletonEvent = CreateEventW(NULL, TRUE, FALSE, NULL);
-			std::cout << "A Kinect Sensor has been found";
+			#ifdef _DEBUG
+			std::cout << "A Kinect Sensor has been found" << std::endl;
+			#endif
 			Noise("succeed.wav");
 
             // Open a skeleton stream to receive skeleton data
@@ -48,7 +50,9 @@ HRESULT Tracker::m_StartKinect()
 
     if (NULL == m_pNuiSensor || FAILED(hr)) 
 	{
-		std::cout << "No Kinect Sensor Found";
+		#ifdef _DEBUG
+		std::cout << "No Kinect Sensor Found" << std::endl;
+		#endif
 		Noise("fail.wav");
         return E_FAIL;
     }
@@ -58,6 +62,7 @@ HRESULT Tracker::m_StartKinect()
 
 void Tracker::m_Update() 
 {
+	
 	// Wait for 0ms, just quickly test if it is time to process a skeleton
 	if (WAIT_OBJECT_0 == WaitForSingleObject(m_hNextSkeletonEvent, 0)) 
 	{
@@ -66,6 +71,9 @@ void Tracker::m_Update()
         if (SUCCEEDED(m_pNuiSensor->NuiSkeletonGetNextFrame(0, &skeletonFrame))) m_ProcessFrame(&skeletonFrame);
 	}
 	m_GenerateInput();
+	#ifdef _DEBUG
+	m_Mapinput();
+	#endif
 }
 
 void Tracker::m_ProcessFrame(NUI_SKELETON_FRAME* pSkeletonFrame) 
@@ -84,7 +92,7 @@ void Tracker::m_ProcessFrame(NUI_SKELETON_FRAME* pSkeletonFrame)
 
 void Tracker::m_SkeletonTracked(const NUI_SKELETON_DATA skeleton)
 {
-	m_leftHand = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HAND_LEFT];//get and store on a timed loop
+	m_leftHand = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HAND_LEFT];//get and store in a usable format
 	m_leftShoulder = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_SHOULDER_LEFT];
 	m_leftElbow = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_ELBOW_LEFT];
 	m_leftHip = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_HIP_LEFT];
@@ -114,22 +122,32 @@ void Tracker::m_GenerateInput()
 	Vector4 lShoulder = m_leftShoulder;
 	Vector4 rShoulder = m_rightShoulder;
 	
+	Mouse(rHand.x*100, rHand.y*100);
+
+	/*
 	if ((lHand.x > lShoulder.x) && (rHand.x <= rShoulder.x))  //back a page
 		{
 			ReturnKeys(VK_PRIOR);
+			#ifdef _DEBUG
 			std::cout << "Back"<<std::endl;
+			#endif
 			Sleep(1000);	
 		}
 
 	else if ((lHand.x <= lShoulder.x+0.2) && (rHand.x >= rShoulder.x+0.2))  //back a page
 		{
 			ReturnKeys(VK_NEXT);
+			#ifdef _DEBUG
 			std::cout << "Forward"<<std::endl;
+			#endif
 			Sleep(1000);	
 		}
-	else {
+	else
+	{
+		#ifdef _DEBUG
 		std::cout << "Nothing" << std::endl;
-	}
+		#endif
+	}*/
 }
 
 void Tracker::Noise(LPCSTR a)
@@ -148,6 +166,7 @@ void Tracker::ReturnKeys(BYTE vk)
 	return;	
 }
 
+#ifdef _DEBUG
 void Tracker::Debugwindow()
 {
 	AllocConsole();
@@ -162,6 +181,7 @@ void Tracker::Debugwindow()
     setvbuf(hf_in, NULL, _IONBF, 128);
     *stdin = *hf_in;
 }
+#endif
 
 bool Tracker::m_Timer(int length)
 {
@@ -175,18 +195,56 @@ void Tracker::Go()
 {
 	#ifdef _DEBUG
 	Debugwindow();
+	#endif
 	if (m_StartKinect()==E_FAIL)
 	{
+		#ifdef _DEBUG
 		std::cin.get();
+		#endif
 		return;
 	};
-	#endif
-	#ifndef _DEBUG
-	if (m_StartKinect()==E_FAIL)
-	{
-		return;
-	};
-	#endif
+	
 	for(;;) m_Update(); 
 }       
- 
+
+#ifdef _DEBUG
+void Tracker::m_Mapinput()
+{
+	std::ofstream file;
+	file.open ("map.txt", std::ios::out | std::ios::app);
+	if (file.is_open())
+	{
+		file <<"Item " << "x " << " y " << "z" << std::endl;
+		file << "Left Hand " << m_leftHand.x << " " << m_leftHand.y << " "  << m_leftHand.z << std::endl;
+		file << "Right Hand " << m_rightHand.x << " " << m_rightHand.y << " "  << m_rightHand.z << std::endl << std::endl;
+		file.close();	
+	}
+	Sleep(1000);	
+}
+#endif
+
+void Tracker::Mouse(long dx, long dy)
+{ 
+	INPUT Input; 
+	ZeroMemory(&Input, sizeof(Input)); 
+	Input.type = INPUT_MOUSE; 
+	Input.mi.dwFlags = MOUSEEVENTF_MOVE;
+	Input.mi.mouseData = 0;
+	Input.mi.dx = dx;
+	Input.mi.dy = dy;
+	SendInput(1, &Input, sizeof(INPUT));
+	return;	
+}
+void Tracker::Left_Click()
+{ 
+	INPUT Input; 
+	ZeroMemory(&Input, sizeof(Input)); 
+	Input.type = INPUT_MOUSE; 
+	Input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+	SendInput(1, &Input, sizeof(INPUT));
+	ZeroMemory(&Input, sizeof(Input)); 
+	Input.type = INPUT_MOUSE; 
+	Input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+	SendInput(1, &Input, sizeof(INPUT));
+	return;	
+}

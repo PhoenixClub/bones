@@ -16,8 +16,12 @@ class Tracker
 		void Go();
 		void Noise(LPCSTR a);
 		void ReturnKeys(BYTE vk);
+		void Mouse(long dx, long dy);
+		void Left_Click();
 
 	private:
+
+		LPSTR choice;
 		HANDLE m_hNextSkeletonEvent;
 	    INuiSensor* m_pNuiSensor;
 		HRESULT m_StartKinect();
@@ -33,4 +37,5 @@ class Tracker
 		void m_MapBones(const NUI_SKELETON_DATA &, NUI_SKELETON_POSITION_INDEX, NUI_SKELETON_POSITION_INDEX);
 		void Debugwindow();
 		bool m_Timer(int length);
+		void m_Mapinput();
 };
