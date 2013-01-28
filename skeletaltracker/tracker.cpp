@@ -122,9 +122,11 @@ void Tracker::m_GenerateInput()
 	Vector4 lShoulder = m_leftShoulder;
 	Vector4 rShoulder = m_rightShoulder;
 	
-	Mouse(rHand.x*100, rHand.y*100);
+	Mouse(rHand.x*100, -rHand.y*100);
+	if (lHand.y >= lShoulder.y)
+		Left_Click();
 
-	/*
+	
 	if ((lHand.x > lShoulder.x) && (rHand.x <= rShoulder.x))  //back a page
 		{
 			ReturnKeys(VK_PRIOR);
@@ -147,7 +149,7 @@ void Tracker::m_GenerateInput()
 		#ifdef _DEBUG
 		std::cout << "Nothing" << std::endl;
 		#endif
-	}*/
+	}
 }
 
 void Tracker::Noise(LPCSTR a)
