@@ -221,7 +221,6 @@ void Tracker::m_Mapinput()
 		file << "Right Hand " << m_rightHand.x << " " << m_rightHand.y << " "  << m_rightHand.z << std::endl << std::endl;
 		file.close();	
 	}
-	Sleep(1000);	
 }
 #endif
 
