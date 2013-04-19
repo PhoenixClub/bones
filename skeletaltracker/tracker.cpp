@@ -1,7 +1,9 @@
 /*
-	Skeletal Tracker - Tracker.cpp
-	Written by Matthew Beckett. 2012.
+	Bones - Tracker.cpp
+
+	Written by Matthew Beckett. 2013.
 */
+
 #include "tracker.h"
 
 HRESULT Tracker::m_StartKinect() 
@@ -72,7 +74,7 @@ void Tracker::m_Update()
 	}
 	m_GenerateInput();
 	#ifdef _DEBUG
-	m_Mapinput();
+		m_Mapinput();
 	#endif
 }
 
@@ -88,7 +90,6 @@ void Tracker::m_ProcessFrame(NUI_SKELETON_FRAME* pSkeletonFrame)
 		}
 	}
 }
-
 
 void Tracker::m_SkeletonTracked(const NUI_SKELETON_DATA skeleton)
 {
@@ -122,12 +123,59 @@ void Tracker::m_GenerateInput()
 	Vector4 lShoulder = m_leftShoulder;
 	Vector4 rShoulder = m_rightShoulder;
 	
-	Mouse(rHand.x*100, -rHand.y*100);
-	if (lHand.y >= lShoulder.y)
-		Left_Click();
+	////////////////////////////////////////////////////////// 
+	/*			
+				*** Mouse Input ***
+	*/
+	///////////////////////////////////////////////////////////
 
-	
-	if ((lHand.x > lShoulder.x) && (rHand.x <= rShoulder.x))  //back a page
+			/*
+				Mouse(rHand.x*100, -rHand.y*100);
+				if (lHand.y >= lShoulder.y)
+					Left_Click();
+			*/
+
+	////////////////////////////////////////////////////////// 
+	/*			
+				*** Semaphore Input ***
+	*/
+	///////////////////////////////////////////////////////////
+
+
+		// A
+		if ((lHand.x < rShoulder.x) && (lHand.y < lShoulder.y) && (rHand.x < rShoulder.x) && (rHand.y < rShoulder.y))
+		{
+				#ifdef _DEBUG
+				std::cout << "Printing the letter A"<<std::endl;
+				#endif
+				Sleep(1000);
+		}
+
+		// B
+		if ((lHand.x < rShoulder.x) && (lHand.y < lShoulder.y+0.2) && (lHand.y > lShoulder.y-0.2) && (rHand.x < rShoulder.x) && (rHand.y < rShoulder.y))
+		{
+				#ifdef _DEBUG
+				std::cout << "Printing the letter B"<<std::endl;
+				#endif
+				Sleep(1000);
+		}
+
+		// C
+		if ((lHand.x < rShoulder.x) && (lHand.y > lShoulder.y+0.2) && (rHand.x < rShoulder.x) && (rHand.y < rShoulder.y))
+		{
+				#ifdef _DEBUG
+				std::cout << "Printing the letter C"<<std::endl;
+				#endif
+				Sleep(1000);
+		}
+
+	////////////////////////////////////////////////////////// 
+	/*			
+				*** Slide Control ***
+	*/
+	///////////////////////////////////////////////////////////
+
+	if ((lHand.x >= lShoulder.x) && (rHand.x <= rShoulder.x))  //back a page
 		{
 			ReturnKeys(VK_PRIOR);
 			#ifdef _DEBUG
@@ -136,7 +184,7 @@ void Tracker::m_GenerateInput()
 			Sleep(1000);	
 		}
 
-	else if ((lHand.x <= lShoulder.x+0.2) && (rHand.x >= rShoulder.x+0.2))  //back a page
+	else if ((lHand.x <= lShoulder.x+0.2) && (rHand.x >= rShoulder.x+0.2))  // Forward a page
 		{
 			ReturnKeys(VK_NEXT);
 			#ifdef _DEBUG
@@ -144,12 +192,16 @@ void Tracker::m_GenerateInput()
 			#endif
 			Sleep(1000);	
 		}
+
+	// Print to debug console if there is no action
+
 	else
 	{
 		#ifdef _DEBUG
 		std::cout << "Nothing" << std::endl;
 		#endif
 	}
+
 }
 
 void Tracker::Noise(LPCSTR a)
@@ -210,6 +262,7 @@ void Tracker::Go()
 }       
 
 #ifdef _DEBUG
+
 void Tracker::m_Mapinput()
 {
 	std::ofstream file;
@@ -219,9 +272,11 @@ void Tracker::m_Mapinput()
 		file <<"Item " << "x " << " y " << "z" << std::endl;
 		file << "Left Hand " << m_leftHand.x << " " << m_leftHand.y << " "  << m_leftHand.z << std::endl;
 		file << "Right Hand " << m_rightHand.x << " " << m_rightHand.y << " "  << m_rightHand.z << std::endl << std::endl;
-		file.close();	
+		file.close();
+		Sleep(1000);
 	}
 }
+
 #endif
 
 void Tracker::Mouse(long dx, long dy)
@@ -236,6 +291,7 @@ void Tracker::Mouse(long dx, long dy)
 	SendInput(1, &Input, sizeof(INPUT));
 	return;	
 }
+
 void Tracker::Left_Click()
 { 
 	INPUT Input; 
@@ -248,4 +304,9 @@ void Tracker::Left_Click()
 	Input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
 	SendInput(1, &Input, sizeof(INPUT));
 	return;	
+}
+
+void Tracker::m_MapBones(const NUI_SKELETON_DATA &, NUI_SKELETON_POSITION_INDEX, NUI_SKELETON_POSITION_INDEX)
+{
+	
 }

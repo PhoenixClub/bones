@@ -1,8 +1,11 @@
 /*
-	Skeletal Tracker - Common.h
+	Bones - Common.h
 	---------------------------
 
-	Written by Matthew Beckett. 2012.
+	Written by Matthew Beckett. 2013.
+
+	This file contails the includes for the Bones project.
+
 */
 
 #include <iostream>
