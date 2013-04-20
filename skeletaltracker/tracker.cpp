@@ -141,9 +141,8 @@ void Tracker::m_GenerateInput()
 	*/
 	///////////////////////////////////////////////////////////
 
-
 		// A
-		if ((lHand.x < rShoulder.x) && (lHand.y < lShoulder.y) && (rHand.x < rShoulder.x) && (rHand.y < rShoulder.y))
+		if ((lHand.x > lShoulder.x) && (lHand.y < lShoulder.y) && (rHand.x > rShoulder.x) && (rHand.y < rShoulder.y))
 		{
 				#ifdef _DEBUG
 				std::cout << "Printing the letter A"<<std::endl;
@@ -152,7 +151,7 @@ void Tracker::m_GenerateInput()
 		}
 
 		// B
-		if ((lHand.x < rShoulder.x) && (lHand.y < lShoulder.y+0.2) && (lHand.y > lShoulder.y-0.2) && (rHand.x < rShoulder.x) && (rHand.y < rShoulder.y))
+		if ((lHand.x > lShoulder.x) && (lHand.x < rShoulder.x) && (rHand.y < rShoulder.y+0.2) && (rHand.y > rShoulder.y-0.2) && (rHand.x > rShoulder.x) && (lHand.y < lShoulder.y))
 		{
 				#ifdef _DEBUG
 				std::cout << "Printing the letter B"<<std::endl;
@@ -161,10 +160,82 @@ void Tracker::m_GenerateInput()
 		}
 
 		// C
-		if ((lHand.x < rShoulder.x) && (lHand.y > lShoulder.y+0.2) && (rHand.x < rShoulder.x) && (rHand.y < rShoulder.y))
+		if ((rHand.x > rShoulder.x) && (rHand.y > lShoulder.y+0.2) && (lHand.x > lShoulder.x) && (lHand.x < rShoulder.x) && (lHand.y < lShoulder.y))
 		{
 				#ifdef _DEBUG
 				std::cout << "Printing the letter C"<<std::endl;
+				#endif
+				Sleep(1000);
+		}
+
+		// D
+		if ((rHand.x < rShoulder.x) && (rHand.y > rShoulder.y) && (lHand.x > lShoulder.x) && (lHand.y < lShoulder.y))
+		{
+				#ifdef _DEBUG
+				std::cout << "Printing the letter D"<<std::endl;
+				#endif
+				Sleep(1000);
+		}	
+		
+		// E
+		if ((lHand.x < rShoulder.x) && (lHand.y > lShoulder.y+0.2) && (rHand.x < rShoulder.x) && (rHand.y < rShoulder.y))
+		{
+				#ifdef _DEBUG
+				std::cout << "Printing the letter E"<<std::endl;
+				#endif
+				Sleep(1000);
+		}
+
+		// F
+		if ((lHand.x < rShoulder.x) && (lHand.y < lShoulder.y+0.2) && (lHand.y > lShoulder.y-0.2) && (rHand.x < rShoulder.x) && (rHand.y < rShoulder.y))
+		{
+				#ifdef _DEBUG
+				std::cout << "Printing the letter F"<<std::endl;
+				#endif
+				Sleep(1000);
+		}
+		
+		// G
+		if ((lHand.x < rShoulder.x) && (lHand.y < lShoulder.y) && (rHand.x < rShoulder.x) && (rHand.y < rShoulder.y))
+		{
+				#ifdef _DEBUG
+				std::cout << "Printing the letter G"<<std::endl;
+				#endif
+				Sleep(1000);
+		}
+
+		// H
+		if ((lHand.x > rShoulder.x) && (lHand.y < rShoulder.y) && (rHand.x > rShoulder.x) && (rHand.y < rShoulder.y+0.2) && (rHand.y > rShoulder.y-0.2))
+		{
+				#ifdef _DEBUG
+				std::cout << "Printing the letter H"<<std::endl;
+				#endif
+				Sleep(1000);
+		}
+		
+		// I
+		if ((lHand.x > rShoulder.x) && (lHand.y > rShoulder.y) && (rHand.x > rShoulder.x) && (rHand.y < rShoulder.y))
+		{
+				#ifdef _DEBUG
+				std::cout << "Printing the letter I"<<std::endl;
+				#endif
+				Sleep(1000);
+		}
+
+		// J
+		if ((rHand.x < rShoulder.x) && (rHand.y > rShoulder.y) && (lHand.x < rShoulder.x) && (lHand.y < lShoulder.y+0.2) && (lHand.y > lShoulder.y-0.2))
+		{
+				#ifdef _DEBUG
+				std::cout << "Printing the letter J"<<std::endl;
+				#endif
+				Sleep(1000);
+		}
+
+		// K
+		if ((lHand.x > lShoulder.x) && (lHand.y > lShoulder.y) && (rHand.x > rShoulder.x) && (rHand.y < rShoulder.y))
+		{
+				#ifdef _DEBUG
+				std::cout << "Printing the letter K"<<std::endl;
 				#endif
 				Sleep(1000);
 		}
@@ -175,6 +246,8 @@ void Tracker::m_GenerateInput()
 	*/
 	///////////////////////////////////////////////////////////
 
+	/*
+	
 	if ((lHand.x >= lShoulder.x) && (rHand.x <= rShoulder.x))  //back a page
 		{
 			ReturnKeys(VK_PRIOR);
@@ -192,6 +265,7 @@ void Tracker::m_GenerateInput()
 			#endif
 			Sleep(1000);	
 		}
+	*/
 
 	// Print to debug console if there is no action
 
@@ -201,7 +275,6 @@ void Tracker::m_GenerateInput()
 		std::cout << "Nothing" << std::endl;
 		#endif
 	}
-
 }
 
 void Tracker::Noise(LPCSTR a)
